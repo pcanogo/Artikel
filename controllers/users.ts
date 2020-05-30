@@ -38,10 +38,19 @@ const getUsers = ({ response }: ctx) => {
 
 
 const getUser = ({ params, response }: ctx) => {
-    console.log(params)
-    console.log('im trying')
-    response.body = {
-        params,
+    const user: User | undefined = users.find(p => p.id === params.id)
+    if (user) {
+        response.status = 200
+        response.body = {
+            success: true,
+            data: user
+        }
+    } else {
+        response.status = 404
+        response.body = {
+            success: false,
+            msg: 'No user found'
+        }
     }
 }
 
