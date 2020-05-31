@@ -1,5 +1,6 @@
 import { v4 } from 'https://deno.land/std/uuid/mod.ts'
 import { User } from '../types.ts'
+import { UsersService } from '../services/users/users.ts'
 import { RouterContext } from "https://deno.land/x/oak/mod.ts";
 
 interface ctx {
@@ -30,79 +31,83 @@ let users: User[] = [
     },
   ];
 
-export const getUsers = ({ response }: ctx) => {
-    response.body = {
-        success: true,
-        data: users
+export class UsersController {
+    private userService : UsersService
+
+    constructor (userService: UsersService) {
+        this.userService = userService
     }
-}
 
-
-export const getUser = ({ params, response }: ctx) => {
-    const user: User | undefined = users.find(p => p.id === params.id)
-    if (!user) {
-        response.status = 404
-        response.body = {
-            success: false,
-            msg: 'No user found'
-        }
-    } else {
-        response.status = 200
+    public getUsers = ({ response } : ctx) => {
         response.body = {
             success: true,
-            data: user
+            data: this.userService.getUsers()
         }
     }
-}
-
-export const addUser = async ( ctx: RouterContext ) => {
-    const body = await ctx.request.body()
-    if(!ctx.request.hasBody){
-        ctx.response.status = 400
-        ctx.response.body = {
-            success: false,
-            msg: "No Data"
+    
+    
+    public getUser = ({ params, response }: ctx) => {
+        const user = this.userService.getUser(params.id)
+        if (!user) {
+            response.status = 404
+            response.body = {
+                success: false,
+                msg: 'No user found'
+            }
+        } else {
+            response.status = 200
+            response.body = {
+                success: true,
+                data: user
+            }
         }
-    } else {
-        const user: User = body.value
-        users.push(user)
-        ctx.response.body = {
+    }
+    
+    public addUser = async ( ctx: RouterContext ) => {
+        const body = await ctx.request.body()
+        if(!ctx.request.hasBody){
+            ctx.response.status = 400
+            ctx.response.body = {
+                success: false,
+                msg: "No Data"
+            }
+        } else {
+            const newUserID = this.userService.addUser(body.value)
+            ctx.response.body = {
+                success: true,
+                msg: `Create user with ID ${newUserID}`
+            }
+        }
+    }
+    
+    public editUser = async ( {params, request, response} : ctx ) => {
+        const body = await request.body()
+        const user = this.userService.getUser(params.id)
+    
+        if(!user){
+            response.status = 404
+            response.body = {
+                success: false,
+                msg: 'No user found'
+            }
+        } else {
+            const updatedUserID = this.userService.editUser(user.id, body.value)
+            response.status = 200
+            response.body = {
+                success: true,
+                data: updatedUserID
+            }
+        }
+    }
+    
+    public deleteUser = ({params, response} : ctx) => {
+        this.userService.deleteUser(params.id)
+        response.body = {
             success: true,
-            msg: `Create user with ID ${user.id}`
+            msg: `Deleted user with ID ${params.id}`
         }
     }
+
 }
 
-export const editUser = async ( ctx: RouterContext ) => {
-    const body = await ctx.request.body()
-    const user: User | undefined = users.find(p => p.id === ctx.params.id)
 
-    if(!user){
-        ctx.response.status = 404
-        ctx.response.body = {
-            success: false,
-            msg: 'No user found'
-        }
-    } else {
-        const updateUser :{
-            first_name?: string;
-            last_name?: string;
-            email?: string;
-        } = body.value
-        users = users.map(u => u.id === ctx.params.id ? { ...u, ...updateUser } : u)
-
-        ctx.response.status = 200
-        ctx.response.body = {
-            success: true,
-            data: users
-        }
-    }
-}
-
-export const deleteUser = (ctx: RouterContext) => {
-    users = users.filter(u => u.id !== ctx.params.id)
-    ctx.response.body = {
-        success: true,
-        msg: `Deleted user with ID ${ctx.params.id}`
-    }
-}
