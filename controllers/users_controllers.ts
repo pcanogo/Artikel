@@ -1,12 +1,8 @@
+import { ctx } from '../types.ts'
 import { v4 } from 'https://deno.land/std/uuid/mod.ts'
-import { User } from '../types.ts'
 import { UsersService} from '../services/users/users_service.ts'
 import { WordBankService } from '../services/wordbanks/word_bank_service.ts'
 import { RouterContext } from "https://deno.land/x/oak/mod.ts";
-
-interface ctx {
-    [key:string]: any;
-}
 
 export class UsersController {
     private userService : UsersService
@@ -14,7 +10,7 @@ export class UsersController {
 
     constructor (
         userService: UsersService,
-        wordBankService: WordBankService        
+        wordBankService : WordBankService        
         ) {
         this.userService = userService
         this.wordBankService = wordBankService
@@ -84,6 +80,7 @@ export class UsersController {
     }
     
     public deleteUser = ({params, response} : ctx) => {
+        this.wordBankService.deleteWordBank(params.id)
         this.userService.deleteUser(params.id)
         response.body = {
             success: true,

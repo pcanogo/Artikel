@@ -20,3 +20,7 @@ export interface User {
 
     wordBank_id: string;
 }
+
+export interface ctx {
+    [key:string]: any;
+}
