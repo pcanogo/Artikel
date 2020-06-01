@@ -1,5 +1,5 @@
 import {User} from '../../types.ts'
-import {UsersService} from './users.ts'
+import {UsersService} from './users_service.ts'
 
 let users: User[] = [
     {
@@ -7,21 +7,24 @@ let users: User[] = [
         first_name: 'user1',
         last_name: 'test1',
         email: '1@gemail.com',
-        password: 'pwd'
+        password: 'pwd',
+        wordBank_id: '1'
     },
     {
         id: '2',
         first_name: 'user2',
         last_name: 'test2',
         email: '2@gemail.com',
-        password: 'pwd'
+        password: 'pwd',
+        wordBank_id: '2'
     },
     {
         id: '3',
         first_name: 'user3',
         last_name: 'test3',
         email: '3@gemail.com',
-        password: 'pwd'
+        password: 'pwd',
+        wordBank_id: '3'
     },
 ];
 
@@ -34,12 +37,12 @@ export class UserRAM extends UsersService {
         return users
     }
 
-    public getUser(id: string) : User | undefined{
+    public getUser(id: string) : User | undefined {
         const user: User | undefined = users.find(x => x.id === id)
         return user
     }
 
-    public addUser(newUser: User) : string{
+    public addUser(newUser: User) : string {
         users.push(newUser)
         return newUser.id
     }
@@ -55,7 +58,7 @@ export class UserRAM extends UsersService {
         return userID
     }
 
-    public deleteUser(id:string) : void{
+    public deleteUser(id:string) : void {
         users = users.filter(x => x.id !== id)
     }
 }

@@ -2,7 +2,6 @@ import { User } from '../../types.ts'
 
 // USERS SERVICE ABSTRACT CLASS
 export abstract class UsersService {
-    constructor() {}
 
     abstract getUsers() : User[] 
     abstract getUser(id: string) : User | undefined

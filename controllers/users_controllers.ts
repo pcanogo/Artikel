@@ -1,41 +1,23 @@
 import { v4 } from 'https://deno.land/std/uuid/mod.ts'
 import { User } from '../types.ts'
-import { UsersService } from '../services/users/users.ts'
+import { UsersService} from '../services/users/users_service.ts'
+import { WordBankService } from '../services/wordbanks/word_bank_service.ts'
 import { RouterContext } from "https://deno.land/x/oak/mod.ts";
 
 interface ctx {
     [key:string]: any;
 }
 
-let users: User[] = [
-    {
-        id: '1',
-        first_name: 'user1',
-        last_name: 'test1',
-        email: '1@gemail.com',
-        password: 'pwd'
-    },
-    {
-        id: '2',
-        first_name: 'user2',
-        last_name: 'test2',
-        email: '2@gemail.com',
-        password: 'pwd'
-    },
-    {
-        id: '3',
-        first_name: 'user3',
-        last_name: 'test3',
-        email: '3@gemail.com',
-        password: 'pwd'
-    },
-  ];
-
 export class UsersController {
     private userService : UsersService
+    private wordBankService: WordBankService
 
-    constructor (userService: UsersService) {
+    constructor (
+        userService: UsersService,
+        wordBankService: WordBankService        
+        ) {
         this.userService = userService
+        this.wordBankService = wordBankService
     }
 
     public getUsers = ({ response } : ctx) => {
@@ -64,7 +46,7 @@ export class UsersController {
     }
     
     public addUser = async ( ctx: RouterContext ) => {
-        const body = await ctx.request.body()
+        let body = await ctx.request.body()
         if(!ctx.request.hasBody){
             ctx.response.status = 400
             ctx.response.body = {
@@ -72,6 +54,7 @@ export class UsersController {
                 msg: "No Data"
             }
         } else {
+            body.value.wordBank_id = this.wordBankService.addWordBank(body.value.id)
             const newUserID = this.userService.addUser(body.value)
             ctx.response.body = {
                 success: true,

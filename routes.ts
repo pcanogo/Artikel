@@ -1,11 +1,13 @@
 import { Router } from 'https://deno.land/x/oak/mod.ts'
-import { UsersController } from './controllers/users.ts'
-import { UserRAM } from './services/users/users_ram.ts'
+import { UsersController } from './controllers/users_controllers.ts'
+import { UserRAM } from './services/users/users_service_ram.ts'
+import { WordBankRAM } from './services/wordbanks/word_bank_ram.ts'
 
 const router = new Router()
 
 const userService = new UserRAM ()
-const userController = new UsersController(userService)
+const wordBankService = new WordBankRAM()
+const userController = new UsersController(userService, wordBankService)
 
 
 router
