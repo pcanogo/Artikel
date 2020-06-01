@@ -41,7 +41,7 @@ export class UsersController {
         }
     }
     
-    public addUser = async ( ctx: RouterContext ) => {
+    public createUser = async ( ctx: RouterContext ) => {
         let body = await ctx.request.body()
         if(!ctx.request.hasBody){
             ctx.response.status = 400
@@ -50,16 +50,16 @@ export class UsersController {
                 msg: "No Data"
             }
         } else {
-            body.value.wordBank_id = this.wordBankService.addWordBank(body.value.id)
-            const newUserID = this.userService.addUser(body.value)
+            body.value.wordBank_id = this.wordBankService.createWordBank(body.value.id)
+            const newUserID = this.userService.createUser(body.value)
             ctx.response.body = {
                 success: true,
-                msg: `Create user with ID ${newUserID}`
+                msg: `Created user with ID ${newUserID}`
             }
         }
     }
     
-    public editUser = async ( {params, request, response} : ctx ) => {
+    public updateUser = async ( {params, request, response} : ctx ) => {
         const body = await request.body()
         const user = this.userService.getUser(params.id)
     
@@ -70,11 +70,11 @@ export class UsersController {
                 msg: 'No user found'
             }
         } else {
-            const updatedUserID = this.userService.editUser(user.id, body.value)
+            const updatedUserID = this.userService.updateUser(user.id, body.value)
             response.status = 200
             response.body = {
                 success: true,
-                data: updatedUserID
+                data: `Updated user with ID ${updatedUserID}`
             }
         }
     }

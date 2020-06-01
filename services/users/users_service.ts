@@ -5,8 +5,8 @@ export abstract class UsersService {
 
     abstract getUsers() : User[] 
     abstract getUser(id: string) : User | undefined
-    abstract addUser(newUser: User) : string
-    abstract editUser(userID: string , updatedUser: User) : string
+    abstract createUser(newUser: User) : string
+    abstract updateUser(userID: string , updatedUser: User) : string
     abstract deleteUser(id: string) : void
 
 }

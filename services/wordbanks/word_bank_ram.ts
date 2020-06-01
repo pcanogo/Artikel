@@ -32,16 +32,30 @@ export class WordBankRAM extends WordBankService {
         const wordBank: WordBank | undefined = wordBanks.find(x => x.id === id)
         return wordBank
     }
-    public addWordBank(newWordBankID: string) : string {
+    public createWordBank(newWordBankID: string) : string {
         const newWordBank : WordBank = {
             'id': newWordBankID,
             'items': []
         }
         wordBanks.push(newWordBank)
-        return newWordBankID
+        return newWordBank.id
     }
 
     public deleteWordBank(id: string) : void {
         wordBanks = wordBanks.filter(x => x.id !== id )
+    }
+
+    public addItem(wordBankID: string, itemID: string) : void {
+        const wordBank = this.getWordBank(wordBankID)
+        if(wordBank){
+            wordBank.items.push(itemID)
+        }
+    }
+
+    public removeItem(wordBankID: string, itemID: string) : void {
+        const wordBank = this.getWordBank(wordBankID)
+        if(wordBank){
+            wordBank.items = wordBank.items.filter(id => id !== itemID )
+        }
     }
 }

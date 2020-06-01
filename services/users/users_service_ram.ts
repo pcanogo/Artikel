@@ -42,18 +42,12 @@ export class UserRAM extends UsersService {
         return user
     }
 
-    public addUser(newUser: User) : string {
+    public createUser(newUser: User) : string {
         users.push(newUser)
         return newUser.id
     }
 
-    public editUser (userID:string, updatedUser: User) : string {
-        const user  : {
-            first_name?: string;
-            last_name?: string;
-            email?: string;
-        } = updatedUser
-        
+    public updateUser (userID:string, updatedUser: User) : string {
         users = users.map(x => x.id === userID ? { ...x, ...updatedUser } : x)
         return userID
     }
