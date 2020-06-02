@@ -1,11 +1,17 @@
 import { ctx, Item } from '../types.ts'
 import { ItemService } from '../services/items/items_service.ts'
+import { WordBankService } from '../services/wordbanks/word_bank_service.ts'
 
 export class ItemController {
-    private itemService: ItemService
+    public itemService: ItemService
+    public wordBankService: WordBankService
 
-    constructor (itemService : ItemService){
+    constructor (
+        itemService : ItemService,
+        wordBankService: WordBankService
+        ){
         this.itemService = itemService
+        this.wordBankService = wordBankService
     }
 
     //createItem
@@ -19,6 +25,7 @@ export class ItemController {
             }
         } else {
             const newItemID = this.itemService.createItem(body.value.id)
+            this.wordBankService.addItem(body.value.wordBank_id, newItemID)
             response.body = {
                 success: true,
                 msg: `Created item with ID ${newItemID}`
@@ -68,10 +75,20 @@ export class ItemController {
 
     //deleteItem
     public deleteItem = ({params, response} : ctx) => {
-        this.itemService.deleteItem(params.id)
-        response.body = {
-            success: true,
-            msg: `Deleted item with ID ${params.id}`
+        const item = this.itemService.getItem(params.id)
+        if(!item){
+            response.status = 404
+            response.body = {
+                success: false,
+                msg: 'Item not found'
+            }
+        } else{
+            this.wordBankService.removeItem(item.wordBank_id, item.id)
+            this.itemService.deleteItem(item.id)
+            response.body = {
+                success: true,
+                msg: `Deleted item with ID ${params.id}`
+            }
         }
     }
 

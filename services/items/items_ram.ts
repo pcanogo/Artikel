@@ -1,7 +1,59 @@
 import {Item} from '../../types.ts'
 import {ItemService} from './items_service.ts'
 
-let items : Item[] = []
+let items : Item[] = [
+    {   
+        id: 'itemID1',
+        wordBank_id: '1',
+        word: 'item1',
+        translation: 'articulo1',
+        imgs: [
+            'urla',
+            'urlb',
+        ]
+    },
+    {   
+        id: 'itemID2',
+        wordBank_id: '1',
+        word: 'item2',
+        translation: 'articulo2',
+        imgs: [
+            'urlc',
+            'urld',
+            'urle',
+        ]
+    },
+    {   
+        id: 'itemID3',
+        wordBank_id: '1',
+        word: 'item3',
+        translation: 'articulo3',
+        imgs: [
+            'urlf',
+        ]
+    },
+    {   
+        id: 'itemID4',
+        wordBank_id: '3',
+        word: 'item4',
+        translation: 'articulo14',
+        imgs: [
+            'url4a',
+            'url4b',
+        ]
+    },
+    {   
+        id: 'itemID5',
+        wordBank_id: '3',
+        word: 'item5',
+        translation: 'articulo5',
+        imgs: [
+            'url5a',
+            'url5b',
+            'url5c'
+        ]
+    },
+]
 
 export class ItemRAM extends ItemService {
     constructor() {

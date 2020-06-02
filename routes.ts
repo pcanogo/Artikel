@@ -14,7 +14,7 @@ const userService = new UserRAM ()
 const wordBankService = new WordBankRAM()
 const itemService = new ItemRAM()
 
-const itenController = new ItemController(itemService)
+const itenController = new ItemController(itemService, wordBankService)
 const wordBankController = new WordBankController(wordBankService)
 const userController = new UsersController(userService, wordBankService)
 
