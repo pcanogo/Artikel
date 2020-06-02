@@ -71,7 +71,13 @@ export class ItemRAM extends ItemService {
     }
 
     public updateItem (itemID:string, updatedItem: Item) : string {
-        items = items.map(x => x.id === itemID ? { ...x, ...updatedItem } : x)
+        let item = this.getItem(itemID)
+        if(item){
+            item.word = updatedItem.word ? updatedItem.word : item.word 
+            item.translation = updatedItem.translation ? updatedItem.translation : item.translation 
+            item.imgs = [...item.imgs, ...updatedItem.imgs]       
+        }
+        // items = items.map(x => x.id === itemID ? { ...x, ...updatedItem } : x)
         return itemID
     }
 

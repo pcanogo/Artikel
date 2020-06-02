@@ -24,7 +24,7 @@ export class ItemController {
                 msg: "No Data"
             }
         } else {
-            const newItemID = this.itemService.createItem(body.value.id)
+            const newItemID = this.itemService.createItem(body.value)
             this.wordBankService.addItem(body.value.wordBank_id, newItemID)
             response.body = {
                 success: true,
