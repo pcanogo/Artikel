@@ -77,7 +77,6 @@ export class ItemRAM extends ItemService {
             item.translation = updatedItem.translation ? updatedItem.translation : item.translation 
             item.imgs = [...item.imgs, ...updatedItem.imgs]       
         }
-        // items = items.map(x => x.id === itemID ? { ...x, ...updatedItem } : x)
         return itemID
     }
 
