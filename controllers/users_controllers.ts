@@ -1,19 +1,23 @@
 import { ctx } from '../types.ts'
 import { v4 } from 'https://deno.land/std/uuid/mod.ts'
 import { UsersService} from '../services/users/users_service.ts'
-import { WordBankService } from '../services/wordbanks/word_bank_service.ts'
+import { WordItemService } from '../services/word-items/word_item_service.ts'
+import { WordImageService } from '../services/word-images/word_image_service.ts'
 import { RouterContext } from "https://deno.land/x/oak/mod.ts";
 
 export class UsersController {
     private userService : UsersService
-    private wordBankService: WordBankService
+    private wordItemService: WordItemService
+    private wordImageService: WordImageService     
 
     constructor (
         userService: UsersService,
-        wordBankService : WordBankService        
+        wordItemService : WordItemService,
+        wordImageService: WordImageService      
         ) {
         this.userService = userService
-        this.wordBankService = wordBankService
+        this.wordItemService = wordItemService
+        this.wordImageService = wordImageService
     }
 
     public getUsers = ({ response } : ctx) => {
@@ -50,7 +54,7 @@ export class UsersController {
                 msg: "No Data"
             }
         } else {
-            body.value.wordBank_id = this.wordBankService.createWordBank(body.value.id)
+            body.value.wordItem_id = this.wordItemService.createWordItem(body.value.id)
             const newUserID = this.userService.createUser(body.value)
             ctx.response.body = {
                 success: true,
@@ -80,7 +84,8 @@ export class UsersController {
     }
     
     public deleteUser = ({params, response} : ctx) => {
-        this.wordBankService.deleteWordBank(params.id)
+        this.wordImageService.deleteUserItemImages(params.id)
+        this.wordItemService.deleteUserItems(params.id)
         this.userService.deleteUser(params.id)
         response.body = {
             success: true,

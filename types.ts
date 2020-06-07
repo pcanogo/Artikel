@@ -1,14 +1,15 @@
-export interface Item {
+export interface  WordImage {
     id: string;
-    wordBank_id: string;
-    word: string;
-    translation: string;
-    imgs: string[];
+    item_id: string;
+    user_id: string;
+    url: string;
 }
 
-export interface WordBank {
+export interface WordItem {
     id: string;
-    items: string[];
+    user_id: string
+    word: string;
+    translation: string;
 }
 
 export interface User {
@@ -17,8 +18,6 @@ export interface User {
     last_name: string;
     email: string;
     password: string;
-
-    wordBank_id: string;
 }
 
 export interface ctx {

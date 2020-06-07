@@ -1,22 +1,23 @@
 import { Router } from 'https://deno.land/x/oak/mod.ts'
 import { UsersController } from './controllers/users_controllers.ts'
-import { WordBankController } from './controllers/word_bank_controllers.ts'
-import { ItemController } from './controllers/item_controller.ts'
+import { WordImageController } from './controllers/word_image_controllers.ts'
+import { WordItemController } from './controllers/word_item_controller.ts'
 
 import { UserRAM } from './services/users/users_service_ram.ts'
-import { WordBankRAM } from './services/wordbanks/word_bank_ram.ts'
-import { ItemRAM } from './services/items/items_ram.ts'
+import { WordImageRAM } from './services/word-images/word_image_ram.ts'
+import { WordItemRAM } from './services/word-items/word_item_ram.ts'
 
 const API = '/api/v1'
 const router = new Router()
 
-const userService = new UserRAM ()
-const wordBankService = new WordBankRAM()
-const itemService = new ItemRAM()
 
-const itenController = new ItemController(itemService, wordBankService)
-const wordBankController = new WordBankController(wordBankService)
-const userController = new UsersController(userService, wordBankService)
+const wordImageService = new WordImageRAM()
+const itemService = new WordItemRAM()
+const userService = new UserRAM ()
+
+const itemController = new WordItemController(itemService, wordImageService)
+const wordImageController = new WordImageController(wordImageService)
+const userController = new UsersController(userService, itemService, wordImageService)
 
 
 router
@@ -29,14 +30,17 @@ router
 .post(`${API}/users`, userController.createUser)
 .put(`${API}/users/:id`, userController.updateUser)
 .delete(`${API}/users/:id`, userController.deleteUser)
-// WORDBANK ROUTES
-.get(`${API}/wordbanks/:id`, wordBankController.getWordBank)
-.post(`${API}/wordbanks`, wordBankController.createWordBank)
-.delete(`${API}/wordbanks/:id`, wordBankController.deleteWordBank)
 // ITEM ROUTES
-.get(`${API}/items/:id`, itenController.getItem)
-.post(`${API}/items`, itenController.createItem)
-.put(`${API}/items/:id`, itenController.updateItem)
-.delete(`${API}/items/:id`, itenController.deleteItem)
+.get(`${API}/items`, itemController.getWordItems)
+.get(`${API}/items/:id`, itemController.getWordItem)
+.post(`${API}/items`, itemController.createWordItem)
+.put(`${API}/items/:id`, itemController.updateWordItem)
+.delete(`${API}/items/:id`, itemController.deleteWordItem)
+// WORDIMAGE ROUTES
+.get(`${API}/wordimages`, wordImageController.getAllWordImages)
+.get(`${API}/wordimages/:id`, wordImageController.getWordImage)
+.post(`${API}/wordimages`, wordImageController.createWordImage)
+.put(`${API}/wordimages/:id`, wordImageController.updateWordImage)
+.delete(`${API}/wordimages/:id`, wordImageController.deleteWordImage)
 
 export default router

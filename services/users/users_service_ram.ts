@@ -7,24 +7,21 @@ let users: User[] = [
         first_name: 'user1',
         last_name: 'test1',
         email: '1@gemail.com',
-        password: 'pwd',
-        wordBank_id: '1'
+        password: 'pwd'
     },
     {
         id: '2',
         first_name: 'user2',
         last_name: 'test2',
         email: '2@gemail.com',
-        password: 'pwd',
-        wordBank_id: '2'
+        password: 'pwd'
     },
     {
         id: '3',
         first_name: 'user3',
         last_name: 'test3',
         email: '3@gemail.com',
-        password: 'pwd',
-        wordBank_id: '3'
+        password: 'pwd'
     },
 ];
 

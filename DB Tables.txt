@@ -1,0 +1,12 @@
+CREATE TABLE users (
+id SERIAL PRIMARY KEY,
+first_name varchar (50),
+last_name varchar(50),
+email varchar(255) UNIQUE NOT NULL,
+password varchar(255) NOT NULL,
+created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE WordBank (
+id SERIAL PRIMARY KEY,
+);
