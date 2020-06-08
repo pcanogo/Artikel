@@ -2,7 +2,7 @@ import {WordItem, WordImage} from '../../types.ts'
 import {WordItemService} from './word_item_service.ts'
 
 let wordItems : WordItem[] = [
-    {   
+    {    
         id: '1',
         user_id: '1',
         word: 'item1',

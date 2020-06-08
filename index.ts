@@ -1,5 +1,5 @@
 import { Application } from "https://deno.land/x/oak/mod.ts";
-import { APP_HOST, APP_PORT } from "./config.js";
+import { APP_HOST, APP_PORT } from "./config.ts";
 import  logger  from './controllers/logger.ts'
 import errorHandler from './controllers/error_handler.ts'
 import router from './routes.ts'
@@ -19,5 +19,6 @@ app.use(router.allowedMethods());
 app.use(_404);
 
 console.info(`Listening on port ${APP_PORT} 🦍`)
+
 
 await app.listen(`${APP_HOST}:${APP_PORT}`);

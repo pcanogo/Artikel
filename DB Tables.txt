@@ -7,6 +7,16 @@ password varchar(255) NOT NULL,
 created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE WordBank (
-id SERIAL PRIMARY KEY,
+CREATE TABLE word_items (
+    id SERIAL PRIMARY KEY,
+    user_id integer REFERENCES users(id) not null,
+    word varchar(255) not null,
+    translation varchar(255) not null
+);
+
+CREATE TABLE  word_images (
+    id SERIAL PRIMARY KEY,
+    item_id integer REFERENCES word_items(id) not null,
+    user_id integer REFERENCES users(id) not null,
+    url varchar(2048) not null
 );

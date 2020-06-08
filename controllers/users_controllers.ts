@@ -1,5 +1,4 @@
 import { ctx } from '../types.ts'
-import { v4 } from 'https://deno.land/std/uuid/mod.ts'
 import { UsersService} from '../services/users/users_service.ts'
 import { WordItemService } from '../services/word-items/word_item_service.ts'
 import { WordImageService } from '../services/word-images/word_image_service.ts'
@@ -20,15 +19,17 @@ export class UsersController {
         this.wordImageService = wordImageService
     }
 
-    public getUsers = ({ response } : ctx) => {
+    public getUsers = async ({ response } : ctx) => {
+        const users = await this.userService.getUsers()
+        console.log(users)
         response.body = {
             success: true,
-            data: this.userService.getUsers()
+            data: users
         }
     }
     
     
-    public getUser = ({ params, response }: ctx) => {
+    public getUser = async ({ params, response }: ctx) => {
         const user = this.userService.getUser(params.id)
         if (!user) {
             response.status = 404
@@ -83,7 +84,7 @@ export class UsersController {
         }
     }
     
-    public deleteUser = ({params, response} : ctx) => {
+    public deleteUser = async ({params, response} : ctx) => {
         this.wordImageService.deleteUserItemImages(params.id)
         this.wordItemService.deleteUserItems(params.id)
         this.userService.deleteUser(params.id)
