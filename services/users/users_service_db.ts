@@ -47,9 +47,6 @@ export class UserDB extends UsersService {
 
     public async getUser(id: string) : Promise<User | undefined> {
         const result = await this._db.execQuery(`SELECT * FROM users WHERE id = ${id};`);
-        console.log("THIS IS QUERY RESULT")
-        console.log(result)
-
         if(!result.rowCount){
             return undefined
         } else {

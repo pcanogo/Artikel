@@ -67,8 +67,6 @@ export class UsersController {
     public updateUser = async ( {params, request, response} : ctx ) => {
         const body = await request.body()
         const user = await this.userService.getUser(params.id)
-        console.log("This is User")
-        console.log(user)
     
         if(!user){
             response.status = 404
