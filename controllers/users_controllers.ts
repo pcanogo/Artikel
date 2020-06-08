@@ -30,7 +30,7 @@ export class UsersController {
     
     
     public getUser = async ({ params, response }: ctx) => {
-        const user = this.userService.getUser(params.id)
+        const user = await this.userService.getUser(params.id)
         if (!user) {
             response.status = 404
             response.body = {
@@ -66,7 +66,9 @@ export class UsersController {
     
     public updateUser = async ( {params, request, response} : ctx ) => {
         const body = await request.body()
-        const user = this.userService.getUser(params.id)
+        const user = await this.userService.getUser(params.id)
+        console.log("This is User")
+        console.log(user)
     
         if(!user){
             response.status = 404

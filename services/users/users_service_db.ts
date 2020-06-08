@@ -2,6 +2,12 @@ import {User} from '../../types.ts'
 import {UsersService} from './users_service.ts'
 import {DBService} from '../../db/db.ts'
 
+const _USER_ID = 0
+const _USER_FNAME = 1
+const _USER_LNAME = 2
+const _USER_EMAIL = 3
+const _USER_PWD = 4
+
 let users: User[] = [
     {
         id: '1',
@@ -28,19 +34,34 @@ let users: User[] = [
 
 export class UserDB extends UsersService {
     private _db : DBService
+
     constructor(dbService: DBService){
         super()
         this._db = dbService
     }
 
-    public async getUsers() : Promise<any[]> {
+    public async getUsers() : Promise<User[]> {
         const result = await this._db.execQuery("SELECT * FROM users;");
         return result.rows
     }
 
-    public getUser(id: string) : User | undefined {
-        const user: User | undefined = users.find(x => x.id === id)
-        return user
+    public async getUser(id: string) : Promise<User | undefined> {
+        const result = await this._db.execQuery(`SELECT * FROM users WHERE id = ${id};`);
+        console.log("THIS IS QUERY RESULT")
+        console.log(result)
+
+        if(!result.rowCount){
+            return undefined
+        } else {
+            const user : User = {
+                id: result.rows[0][_USER_ID],
+                first_name: result.rows[0][_USER_FNAME],
+                last_name: result.rows[0][_USER_LNAME],
+                email: result.rows[0][_USER_EMAIL],
+                password: result.rows[0][_USER_PWD]
+            }
+            return user
+        }   
     }
 
     public createUser(newUser: User) : string {
