@@ -8,15 +8,14 @@ export class DBService {
     }
 
     public async execQuery(query_string:string) : Promise<QueryResult> {
-        let result
         try{
             await this._client.connect()
-            result = await this._client.query(query_string)
+            const result = await this._client.query(query_string)
+            return result
         } catch (error){
-            result = error
+            throw new Error(error) 
         } finally {
             await this._client.end()
-            return result
         }
     }
 }
