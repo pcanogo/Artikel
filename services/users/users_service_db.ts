@@ -41,12 +41,12 @@ export class UserDB extends UsersService {
     }
 
     public async getUsers() : Promise<User[]> {
-        const result = await this._db.execQuery("SELECT * FROM users;");
+        const result = await this._db.execQuery('SELECT * FROM users;');
         return result.rows
     }
 
     public async getUser(id: string) : Promise<User | undefined> {
-        const result = await this._db.execQuery(`SELECT * FROM users WHERE id = ${id};`);
+        const result = await this._db.execQuery('SELECT * FROM users WHERE id = $1;', [id])
         if(!result.rowCount){
             return undefined
         } else {
@@ -61,18 +61,27 @@ export class UserDB extends UsersService {
         }   
     }
 
-    public createUser(newUser: User) : string {
-        users.push(newUser)
-        return newUser.id
+    public async createUser(newUser: User) : Promise<string> {
+        const result = await this._db.execQuery(`
+        INSERT INTO users (first_name, last_name, email, password)
+        VALUES ($1,$2,$3,$4)
+        RETURNING id;`,
+        [newUser.first_name, newUser.last_name, newUser.email, newUser.password]
+        );
+        return result.rows[0][0]
     }
 
-    public updateUser (userID:string, updatedUser: User) : string {
+    public async updateUser (userID:string, updatedUser: User) : Promise<string> {
         users = users.map(x => x.id === userID ? { ...x, ...updatedUser } : x)
         return userID
     }
 
-    public deleteUser(id:string) : void {
-        users = users.filter(x => x.id !== id)
+    public async deleteUser(id:string) : Promise<void> {
+        await this._db.execQuery(`
+        DELETE FROM users
+        WHERE id=$1;`,
+        [id]
+        );
     }
 
 

@@ -7,11 +7,16 @@ export class DBService {
         this._client = new Client(_dbConfigs)
     }
 
-    public async execQuery(query_string:string) : Promise<QueryResult> {
+    public async execQuery(query_string:string, query_params?: any[] ) : Promise<QueryResult> {
         try{
             await this._client.connect()
-            const result = await this._client.query(query_string)
-            return result
+            if (!query_params){
+                const result = await this._client.query(query_string)
+                return result
+            } else {
+                const result = await this._client.query(query_string, ...query_params)
+                return result
+            }
         } catch (error){
             throw new Error(error) 
         } finally {

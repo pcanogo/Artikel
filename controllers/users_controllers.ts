@@ -55,11 +55,10 @@ export class UsersController {
                 msg: "No Data"
             }
         } else {
-            body.value.wordItem_id = this.wordItemService.createWordItem(body.value.id)
-            const newUserID = this.userService.createUser(body.value)
+            const newUserID = await this.userService.createUser(body.value)
             ctx.response.body = {
                 success: true,
-                msg: `Created user with ID ${newUserID}`
+                msg: newUserID
             }
         }
     }
@@ -90,7 +89,7 @@ export class UsersController {
         this.userService.deleteUser(params.id)
         response.body = {
             success: true,
-            msg: `Deleted user with ID ${params.id}`
+            msg: `Deleted user successfully`
         }
     }
 
