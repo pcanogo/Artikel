@@ -8,30 +8,6 @@ const _USER_LNAME = 2
 const _USER_EMAIL = 3
 const _USER_PWD = 4
 
-let users: User[] = [
-    {
-        id: '1',
-        first_name: 'user1',
-        last_name: 'test1',
-        email: '1@gemail.com',
-        password: 'pwd'
-    },
-    {
-        id: '2',
-        first_name: 'user2',
-        last_name: 'test2',
-        email: '2@gemail.com',
-        password: 'pwd'
-    },
-    {
-        id: '3',
-        first_name: 'user3',
-        last_name: 'test3',
-        email: '3@gemail.com',
-        password: 'pwd'
-    },
-];
-
 export class UserDB extends UsersService {
     private _db : DBService
 
@@ -110,6 +86,4 @@ export class UserDB extends UsersService {
         [id]
         );
     }
-
-
 }
