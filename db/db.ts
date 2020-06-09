@@ -23,4 +23,8 @@ export class DBService {
             await this._client.end()
         }
     }
+
+    public cleanString(str : string){
+        return str.toString().replace(';', '/')
+    }
 }

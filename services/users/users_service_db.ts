@@ -68,12 +68,39 @@ export class UserDB extends UsersService {
         RETURNING id;`,
         [newUser.first_name, newUser.last_name, newUser.email, newUser.password]
         );
-        return result.rows[0][0]
+        return result.rows[0][_USER_ID]
     }
 
-    public async updateUser (userID:string, updatedUser: User) : Promise<string> {
-        users = users.map(x => x.id === userID ? { ...x, ...updatedUser } : x)
-        return userID
+    public async updateUser (userID:string, user: User) : Promise<string> {
+
+        let query = 'UPDATE users '
+        let hasSet = false
+
+        if(user.first_name!==undefined){
+            if(!hasSet) query += 'SET '
+            query += `
+                first_name = '${this._db.cleanString(user.first_name)}' `
+                + (user.last_name !== undefined ? ", " : "")
+            hasSet = true
+        }
+        if(user.last_name!==undefined){
+            if(!hasSet) query += 'SET '
+            query += `
+                last_name = '${this._db.cleanString(user.last_name)}' `
+                + (user.email !== undefined ? ", " : "")
+            hasSet = true
+        }
+        if(user.email!==undefined){
+            if(!hasSet) query += 'SET '
+            query += `
+                email = '${this._db.cleanString(user.email)}' `
+        }
+
+        query += `
+        WHERE id=${this._db.cleanString(userID)} RETURNING id;`
+        console.log(query)
+        const result = await this._db.execQuery(query)
+        return result.rows[0][_USER_ID]
     }
 
     public async deleteUser(id:string) : Promise<void> {

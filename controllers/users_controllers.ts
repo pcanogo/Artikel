@@ -74,11 +74,11 @@ export class UsersController {
                 msg: 'No user found'
             }
         } else {
-            const updatedUserID = this.userService.updateUser(user.id, body.value)
+            const updatedUserID = await this.userService.updateUser(user.id, body.value)
             response.status = 200
             response.body = {
                 success: true,
-                data: `Updated user with ID ${updatedUserID}`
+                data: `${updatedUserID}`
             }
         }
     }
