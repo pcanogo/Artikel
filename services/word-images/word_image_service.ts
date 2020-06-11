@@ -11,5 +11,7 @@ export abstract class WordImageService {
     abstract getItemImages(itemId: string) : WordImage[] 
     abstract getItemImagesURL(itemId: string) : string[]
     abstract deleteItemImages(itemId: string) : void
+
+    abstract getUserItemImages(userId: string) : WordImage[] | Promise<WordImage[]>
     abstract deleteUserItemImages(userId: string) : void
 }

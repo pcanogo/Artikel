@@ -2,11 +2,11 @@ import {User} from '../../types.ts'
 import {UsersService} from './users_service.ts'
 import {DBService} from '../../db/db.ts'
 
-const _USER_ID = 0
-const _USER_FNAME = 1
-const _USER_LNAME = 2
-const _USER_EMAIL = 3
-const _USER_PWD = 4
+const USER_ID = 0
+const FIRST_NAME = 1
+const LAST_NAME = 2
+const EMAIL = 3
+const PWD = 4
 
 export class UserDB extends UsersService {
     private _db : DBService
@@ -27,11 +27,11 @@ export class UserDB extends UsersService {
             return undefined
         } else {
             const user : User = {
-                id: result.rows[0][_USER_ID],
-                first_name: result.rows[0][_USER_FNAME],
-                last_name: result.rows[0][_USER_LNAME],
-                email: result.rows[0][_USER_EMAIL],
-                password: result.rows[0][_USER_PWD]
+                id: result.rows[0][USER_ID],
+                first_name: result.rows[0][FIRST_NAME],
+                last_name: result.rows[0][LAST_NAME],
+                email: result.rows[0][EMAIL],
+                password: result.rows[0][PWD]
             }
             return user
         }   
@@ -44,7 +44,7 @@ export class UserDB extends UsersService {
         RETURNING id;`,
         [newUser.first_name, newUser.last_name, newUser.email, newUser.password]
         );
-        return result.rows[0][_USER_ID]
+        return result.rows[0][USER_ID]
     }
 
     public async updateUser (userID:string, user: User) : Promise<string> {
@@ -76,7 +76,7 @@ export class UserDB extends UsersService {
         WHERE id=${this._db.cleanString(userID)} RETURNING id;`
         console.log(query)
         const result = await this._db.execQuery(query)
-        return result.rows[0][_USER_ID]
+        return result.rows[0][USER_ID]
     }
 
     public async deleteUser(id:string) : Promise<void> {

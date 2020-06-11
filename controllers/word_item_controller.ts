@@ -14,10 +14,11 @@ export class WordItemController {
         this.wordImageService = wordImageService
     }
 
-    public getWordItems = ({ response } : ctx) => {
+    public getWordItems = async ({ response } : ctx) => {
+        const items = await this.itemService.getAllWordItems()
         response.body = {
             success: true,
-            data: this.itemService.getAllWordItems()
+            data: items
         }
     }
 
@@ -31,7 +32,7 @@ export class WordItemController {
                 msg: "No Data"
             }
         } else {
-            const newWordItemID = this.itemService.createWordItem(body.value)
+            const newWordItemID = await this.itemService.createWordItem(body.value)
             response.body = {
                 success: true,
                 msg: `Created item with ID ${newWordItemID}`
@@ -41,10 +42,12 @@ export class WordItemController {
     } 
 
     //getWordItem
-    public getWordItem = ({params, response} : ctx) => {
+    public getWordItem = async ({params, response} : ctx) => {
+        const item_info = await this.itemService.getWordItem(params.id)
+        const item_urls = await this.wordImageService.getItemImagesURL(params.id)
         const item = {
-            ...this.itemService.getWordItem(params.id),
-            img_urls: [...this.wordImageService.getItemImagesURL(params.id)]
+            ...item_info,
+            img_urls: [...item_urls]
         }
 
         if(!item){
@@ -65,7 +68,7 @@ export class WordItemController {
 
     public updateWordItem = async ( {params, request, response} : ctx ) => {
         const body = await request.body()
-        const item = this.itemService.getWordItem(params.id)
+        const item = await this.itemService.getWordItem(params.id)
     
         if(!item){
             response.status = 404
@@ -74,7 +77,7 @@ export class WordItemController {
                 msg: 'WordItem not found'
             }
         } else {
-            const updatedWordItemID = this.itemService.updateWordItem(item.id, body.value)
+            const updatedWordItemID = await this.itemService.updateWordItem(item.id, body.value)
             response.status = 200
             response.body = {
                 success: true,
@@ -84,8 +87,8 @@ export class WordItemController {
     }
 
     //deleteWordItem
-    public deleteWordItem = ({params, response} : ctx) => {
-        const item = this.itemService.getWordItem(params.id)
+    public deleteWordItem = async ({params, response} : ctx) => {
+        const item = await this.itemService.getWordItem(params.id)
         if(!item){
             response.status = 404
             response.body = {
@@ -93,11 +96,49 @@ export class WordItemController {
                 msg: 'WordItem not found'
             }
         } else{
-            this.wordImageService.deleteItemImages(item.id)
-            this.itemService.deleteWordItem(item.id)
+            await this.wordImageService.deleteItemImages(item.id)
+            await this.itemService.deleteWordItem(item.id)
             response.body = {
                 success: true,
-                msg: `Deleted item with ID ${params.id}`
+                msg: 'Deleted item successfully'
+            }
+        }
+    }
+
+    public getUserItems = async ({params, response} : ctx) => {
+        const items = await this.itemService.getUserItems(params.id)
+
+        if(!items){
+            response.status = 404
+            response.body = {
+                success: false,
+                msg: 'User has no word items'
+            }
+        } else {
+            response.status = 200
+            response.body = {
+                success: true,
+                data: items
+            }
+        }
+    }
+
+    public deleteUserItems = async ({params, response} : ctx) => {
+        const items = await this.itemService.getUserItems(params.id)
+
+        if(!items){
+            response.status = 404
+            response.body = {
+                success: false,
+                msg: 'User has no word items'
+            }
+        } else {
+            await this.wordImageService.deleteUserItemImages(params.id)
+            await this.itemService.deleteUserItems(params.id)
+            response.status = 200
+            response.body = {
+                success: true,
+                data: items
             }
         }
     }

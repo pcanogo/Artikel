@@ -6,67 +6,67 @@ let wordImages: WordImage[] = [
         id: '1',
         item_id:'1',
         user_id: '1',
-        url: 'url1'
+        url: 'url 1a'
     },
     {
         id: '2',
         item_id:'1',
         user_id: '1',
-        url: 'url2'
+        url: 'url 1b'
     },
     {
         id: '3',
         item_id:'2',
         user_id: '1',
-        url: 'url3'
+        url: 'url 2a'
     },
     {
         id: '4',
         item_id:'2',
         user_id: '1',
-        url: 'url4'
+        url: 'url 2b'
     },
     {
         id: '5',
         item_id:'2',
         user_id: '1',
-        url: 'url5'
+        url: 'url 2c'
     },
     {
         id: '6',
         item_id:'3',
         user_id: '1',
-        url: 'url6'
+        url: 'url 3a'
     },
     {
         id: '7',
         item_id:'4',
         user_id: '3',
-        url: 'url7'
+        url: 'url 4a'
     },
     {
         id: '8',
         item_id:'4',
         user_id: '3',
-        url: 'url8'
+        url: 'url 4b'
     },
     {
         id: '9',
         item_id:'5',
         user_id: '3',
-        url: 'url9'
+        url: 'url 5a'
     },
     {
         id: '10',
         item_id:'5',
         user_id: '3',
-        url: 'url10'
+        url: 'url 5b'
     },
     {
         id: '11',
         item_id:'5',
         user_id: '3',
-        url: 'url11'
+        url: 'url 5c'
     }
 ]
 
@@ -113,6 +113,13 @@ export class WordImageRAM extends WordImageService {
 
     public deleteItemImages(itemId: string) : void { 
         wordImages = wordImages.filter(x => x.item_id !== itemId)
+    }
+
+    public getUserItemImages(userID: string) : WordImage[] {
+        let userItemImages: WordImage[] = []
+        userItemImages
+            .filter(x => x.user_id === userID)
+        return userItemImages
     }
 
     public deleteUserItemImages(userId: string) : void {
