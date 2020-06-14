@@ -138,7 +138,7 @@ export class WordItemController {
             response.status = 200
             response.body = {
                 success: true,
-                data: items
+                data: 'User items deleted.'
             }
         }
     }

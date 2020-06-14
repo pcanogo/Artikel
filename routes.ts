@@ -7,7 +7,7 @@ import { WordImageController } from './controllers/word_image_controllers.ts'
 import { WordItemController } from './controllers/word_item_controller.ts'
 
 import { UserDB } from './services/users/users_service_db.ts'
-import { WordImageRAM } from './services/word-images/word_image_ram.ts'
+import { WordImageDB } from './services/word-images/word_image_db.ts'
 import { WordItemDB } from './services/word-items/word_item_db.ts'
 
 // import { UserRAM } from './services/users/users_service_ram.ts'
@@ -20,7 +20,7 @@ const router = new Router()
 const db = new DBService(configs['local'])
 
 
-const wordImageService = new WordImageRAM()
+const wordImageService = new WordImageDB(db)
 const itemService = new WordItemDB(db)
 const userService = new UserDB(db)
 
@@ -49,10 +49,16 @@ router
 .get(`${API}/users/items/:id`, itemController.getUserItems)
 .delete(`${API}/users/items/:id`, itemController.deleteUserItems)
 // WORDIMAGE ROUTES
-.get(`${API}/wordimages`, wordImageController.getAllWordImages)
-.get(`${API}/wordimages/:id`, wordImageController.getWordImage)
-.post(`${API}/wordimages`, wordImageController.createWordImage)
-.put(`${API}/wordimages/:id`, wordImageController.updateWordImage)
-.delete(`${API}/wordimages/:id`, wordImageController.deleteWordImage)
+.get(`${API}/images`, wordImageController.getAllWordImages)
+.get(`${API}/images/:id`, wordImageController.getWordImage)
+.post(`${API}/images`, wordImageController.createWordImage)
+.put(`${API}/images/:id`, wordImageController.updateWordImage)
+.delete(`${API}/images/:id`, wordImageController.deleteWordImage)
+// ITEM IMAGE ROUTES
+.get(`${API}/items/images/:id`, wordImageController.getItemImages)
+.delete(`${API}/items/images/:id`, wordImageController.deleteItemImages)
+// USER IMAGE ROUTE 
+.get(`${API}/users/images/:id`, wordImageController.getUserImages)
+.delete(`${API}/users/images/:id`, wordImageController.deleteUserImages)
 
 export default router
