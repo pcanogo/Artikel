@@ -40,6 +40,7 @@ export class UserRAM extends UsersService {
     }
 
     public createUser(newUser: User) : string {
+        newUser['id'] = String(users.length + 1)
         users.push(newUser)
         return newUser.id
     }

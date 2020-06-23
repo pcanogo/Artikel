@@ -1,8 +1,9 @@
-import { ctx } from '../types.ts'
+import { ctx, User } from '../types.ts'
 import { UsersService} from '../services/users/users_service.ts'
 import { WordItemService } from '../services/word-items/word_item_service.ts'
 import { WordImageService } from '../services/word-images/word_image_service.ts'
 import { RouterContext } from "https://deno.land/x/oak/mod.ts";
+import * as bcrypt from "https://deno.land/x/bcrypt/mod.ts";
 
 export class UsersController {
     private userService : UsersService
@@ -47,7 +48,11 @@ export class UsersController {
     }
     
     public createUser = async ( ctx: RouterContext ) => {
-        let body = await ctx.request.body()
+        const body = await ctx.request.body()
+        const salt = await bcrypt.genSalt(8);
+        const hash = await bcrypt.hash(body.value.password, salt);
+        body.value['password'] = hash
+        
         if(!ctx.request.hasBody){
             ctx.response.status = 400
             ctx.response.body = {

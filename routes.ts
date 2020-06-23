@@ -10,7 +10,7 @@ import { UserDB } from './services/users/users_service_db.ts'
 import { WordImageDB } from './services/word-images/word_image_db.ts'
 import { WordItemDB } from './services/word-items/word_item_db.ts'
 
-// import { UserRAM } from './services/users/users_service_ram.ts'
+import { UserRAM } from './services/users/users_service_ram.ts'
 // import { WordImageRAM } from './services/word-images/word_image_ram.ts'
 // import { WordItemRAM } from './services/word-items/word_item_ram.ts'
 
@@ -22,7 +22,7 @@ const db = new DBService(configs['local'])
 
 const wordImageService = new WordImageDB(db)
 const itemService = new WordItemDB(db)
-const userService = new UserDB(db)
+const userService = new UserRAM
 
 const itemController = new WordItemController(itemService, wordImageService)
 const wordImageController = new WordImageController(wordImageService)
