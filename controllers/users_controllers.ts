@@ -2,8 +2,8 @@ import { ctx, User } from '../types.ts'
 import { UsersService} from '../services/users/users_service.ts'
 import { WordItemService } from '../services/word-items/word_item_service.ts'
 import { WordImageService } from '../services/word-images/word_image_service.ts'
-import { RouterContext } from "https://deno.land/x/oak/mod.ts";
-import * as bcrypt from "https://deno.land/x/bcrypt/mod.ts";
+import { RouterContext } from "https://deno.land/x/oak/mod.ts"
+import * as bcrypt from "https://deno.land/x/bcrypt/mod.ts"
 
 export class UsersController {
     private userService : UsersService
@@ -20,10 +20,9 @@ export class UsersController {
         this.wordImageService = wordImageService
     }
 
-    public getUsers = async ({ response } : ctx) => {
+    public getUsers = async (ctx : RouterContext) => {
         const users = await this.userService.getUsers()
-        console.log(users)
-        response.body = {
+        ctx.response.body = {
             success: true,
             data: users
         }

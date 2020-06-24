@@ -53,4 +53,9 @@ export class UserRAM extends UsersService {
     public deleteUser(id:string) : void {
         users = users.filter(x => x.id !== id)
     }
+
+    public getUserByEmail(email: string) : User | undefined {
+        const user = users.find(x => x.email === email)
+        return user
+    }
 }

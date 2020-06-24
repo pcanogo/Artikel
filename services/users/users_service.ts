@@ -1,5 +1,4 @@
 import { User } from '../../types.ts'
-import { QueryResult } from "https://deno.land/x/postgres/query.ts"
 
 // USERS SERVICE ABSTRACT CLASS
 export abstract class UsersService {
@@ -9,5 +8,7 @@ export abstract class UsersService {
     abstract createUser(newUser: User) : string | Promise<string>
     abstract updateUser(userID: string , updatedUser: User) : string | Promise<string>
     abstract deleteUser(id: string) : void | Promise<void>
+
+    abstract getUserByEmail(email: string) : User | undefined | Promise<User | undefined>
 
 }

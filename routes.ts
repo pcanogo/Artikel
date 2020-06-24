@@ -1,7 +1,10 @@
 import { Router } from 'https://deno.land/x/oak/mod.ts'
 import { Client } from "https://deno.land/x/postgres/mod.ts"
-import { DBService } from './db/db.ts'
 import { configs } from './config.ts'
+import { DBService } from './db/db.ts'
+import {AuthService} from './services/auth.ts'
+
+import { AuthController } from './controllers/auth_controllers.ts'
 import { UsersController } from './controllers/users_controllers.ts'
 import { WordImageController } from './controllers/word_image_controllers.ts'
 import { WordItemController } from './controllers/word_item_controller.ts'
@@ -17,48 +20,53 @@ import { UserRAM } from './services/users/users_service_ram.ts'
 
 const API = '/api/v1'
 const router = new Router()
+
 const db = new DBService(configs['local'])
+const authService = new AuthService(configs['local'].secret_key)
 
-
-const wordImageService = new WordImageDB(db)
-const itemService = new WordItemDB(db)
 const userService = new UserRAM
+const itemService = new WordItemDB(db)
+const wordImageService = new WordImageDB(db)
 
+const auth = new AuthController(userService, authService);
+const userController = new UsersController(userService, itemService, wordImageService)
 const itemController = new WordItemController(itemService, wordImageService)
 const wordImageController = new WordImageController(wordImageService)
-const userController = new UsersController(userService, itemService, wordImageService)
+
 
 
 router
 .get('/', (ctx:any) => {
     ctx.response.body = 'Hello I am the App 🐻'
 })
+// AUTH ROUTES
+.post(`${API}/auth`, auth.login)
 // USER ROUTES
-.get(`${API}/users`, userController.getUsers)
-.get(`${API}/users/:id`, userController.getUser)
-.post(`${API}/users`, userController.createUser)
-.put(`${API}/users/:id`, userController.updateUser)
-.delete(`${API}/users/:id`, userController.deleteUser)
+.get(`${API}/users`, auth.authSession, userController.getUsers)
+.get(`${API}/users/:id`, auth.authSession, userController.getUser)
+.post(`${API}/users`, auth.authSession, userController.createUser)
+.put(`${API}/users/:id`, auth.authSession, userController.updateUser)
+.delete(`${API}/users/:id`, auth.authSession, userController.deleteUser)
 // ITEM ROUTES
-.get(`${API}/items`, itemController.getWordItems)
-.get(`${API}/items/:id`, itemController.getWordItem)
-.post(`${API}/items`, itemController.createWordItem)
-.put(`${API}/items/:id`, itemController.updateWordItem)
-.delete(`${API}/items/:id`, itemController.deleteWordItem)
+.get(`${API}/items`, auth.authSession, itemController.getWordItems)
+.get(`${API}/items/:id`, auth.authSession, itemController.getWordItem)
+.post(`${API}/items`, auth.authSession, itemController.createWordItem)
+.put(`${API}/items/:id`, auth.authSession, itemController.updateWordItem)
+.delete(`${API}/items/:id`, auth.authSession, itemController.deleteWordItem)
 // USER ITEM ROUTES
-.get(`${API}/users/items/:id`, itemController.getUserItems)
-.delete(`${API}/users/items/:id`, itemController.deleteUserItems)
+.get(`${API}/users/items/:id`, auth.authSession, itemController.getUserItems)
+.delete(`${API}/users/items/:id`, auth.authSession, itemController.deleteUserItems)
 // WORDIMAGE ROUTES
-.get(`${API}/images`, wordImageController.getAllWordImages)
-.get(`${API}/images/:id`, wordImageController.getWordImage)
-.post(`${API}/images`, wordImageController.createWordImage)
-.put(`${API}/images/:id`, wordImageController.updateWordImage)
-.delete(`${API}/images/:id`, wordImageController.deleteWordImage)
+.get(`${API}/images`, auth.authSession, wordImageController.getAllWordImages)
+.get(`${API}/images/:id`, auth.authSession, wordImageController.getWordImage)
+.post(`${API}/images`, auth.authSession, wordImageController.createWordImage)
+.put(`${API}/images/:id`, auth.authSession, wordImageController.updateWordImage)
+.delete(`${API}/images/:id`, auth.authSession, wordImageController.deleteWordImage)
 // ITEM IMAGE ROUTES
-.get(`${API}/items/images/:id`, wordImageController.getItemImages)
-.delete(`${API}/items/images/:id`, wordImageController.deleteItemImages)
+.get(`${API}/items/images/:id`, auth.authSession, wordImageController.getItemImages)
+.delete(`${API}/items/images/:id`, auth.authSession, wordImageController.deleteItemImages)
 // USER IMAGE ROUTE 
-.get(`${API}/users/images/:id`, wordImageController.getUserImages)
-.delete(`${API}/users/images/:id`, wordImageController.deleteUserImages)
+.get(`${API}/users/images/:id`, auth.authSession, wordImageController.getUserImages)
+.delete(`${API}/users/images/:id`, auth.authSession, wordImageController.deleteUserImages)
 
 export default router

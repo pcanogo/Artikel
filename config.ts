@@ -10,5 +10,6 @@ export const configs = {
         hostname: config().LOCAL_DB_HOST, 
         port: parseInt(config().LOCAL_DB_PORT), 
         password: config().LOCAL_DB_PASSWORD,
+        secret_key: config().SECRET_KEY
     },  
 }

@@ -86,4 +86,20 @@ export class UserDB extends UsersService {
         [id]
         );
     }
+
+    public async getUserByEmail(email: string) : Promise<User | undefined> {
+        const result = await this._db.execQuery('SELECT * FROM users WHERE email = $1;', [email])
+        if(!result.rowCount){
+            return undefined
+        } else {
+            const user : User = {
+                id: result.rows[0][USER_ID],
+                first_name: result.rows[0][FIRST_NAME],
+                last_name: result.rows[0][LAST_NAME],
+                email: result.rows[0][EMAIL],
+                password: result.rows[0][PWD]
+            }
+            return user
+        }   
+    }
 }
