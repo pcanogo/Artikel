@@ -1,7 +1,7 @@
 import { makeJwt, setExpiration, Jose, Payload } from 'https://deno.land/x/djwt/create.ts'
 import { validateJwt } from "https://deno.land/x/djwt/validate.ts";
-import * as bcrypt from 'https://deno.land/x/bcrypt/mod.ts'
-import { User } from '../types.ts'
+import { User } from '../../types.ts';
+import { RouterContext } from "https://deno.land/x/oak/mod.ts"
 
 export class AuthService {
     private key: string
@@ -9,9 +9,11 @@ export class AuthService {
         this.key = key
     }
 
-    public async generateJWT(userID: string) {
+    public async generateJWT(user: User) {
+        const userType  = user.type ? user.type : 'user'
         const payload: Payload = {
-            iss: userID,
+            iss: user.id,
+            userType: userType,
             exp: setExpiration(new Date().getTime() + 10 * 60 * 1000),
         }
         const header: Jose = {
@@ -20,7 +22,7 @@ export class AuthService {
         }
         const key = this.key
 
-        return makeJwt({header, payload, key})
+        return makeJwt({ header, payload, key})
     }
 
     public async validateSession(jwt: string) {
@@ -32,6 +34,14 @@ export class AuthService {
             throw new Error(error) 
         }
         
+    }
+    public async getSession (ctx: RouterContext)  {
+        const token = await ctx.request.headers.get('authorization')
+        if(token) {
+            const jwt = token.split(' ')[1]
+            const session = await this.validateSession(jwt)
+            return session
+        }
     }
 
 }

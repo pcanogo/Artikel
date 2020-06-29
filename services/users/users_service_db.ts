@@ -7,6 +7,7 @@ const FIRST_NAME = 1
 const LAST_NAME = 2
 const EMAIL = 3
 const PWD = 4
+const TYPE = 6
 
 export class UserDB extends UsersService {
     private _db : DBService
@@ -31,7 +32,8 @@ export class UserDB extends UsersService {
                 first_name: result.rows[0][FIRST_NAME],
                 last_name: result.rows[0][LAST_NAME],
                 email: result.rows[0][EMAIL],
-                password: result.rows[0][PWD]
+                password: result.rows[0][PWD],
+                type: result.rows[0][TYPE]
             }
             return user
         }   

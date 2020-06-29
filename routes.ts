@@ -2,7 +2,7 @@ import { Router } from 'https://deno.land/x/oak/mod.ts'
 import { Client } from "https://deno.land/x/postgres/mod.ts"
 import { configs } from './config.ts'
 import { DBService } from './db/db.ts'
-import {AuthService} from './services/auth.ts'
+import {AuthService} from './services/auth-service/auth.ts'
 
 import { AuthController } from './controllers/auth_controllers.ts'
 import { UsersController } from './controllers/users_controllers.ts'
@@ -29,7 +29,7 @@ const itemService = new WordItemDB(db)
 const wordImageService = new WordImageDB(db)
 
 const auth = new AuthController(userService, authService);
-const userController = new UsersController(userService, itemService, wordImageService)
+const userController = new UsersController(userService, itemService, wordImageService, authService)
 const itemController = new WordItemController(itemService, wordImageService)
 const wordImageController = new WordImageController(wordImageService)
 
@@ -42,13 +42,11 @@ router
 // AUTH ROUTES
 .post(`${API}/auth`, auth.login)
 // USER ROUTES
-.get(`${API}/users`, auth.authSession, userController.getUsers)
-.get(`${API}/users/:id`, auth.authSession, userController.getUser)
-.post(`${API}/users`, auth.authSession, userController.createUser)
-.put(`${API}/users/:id`, auth.authSession, userController.updateUser)
-.delete(`${API}/users/:id`, auth.authSession, userController.deleteUser)
+.get(`${API}/users/:id`, auth.authSession,userController.checkUserOwner, userController.getUser)
+.post(`${API}/users`, userController.createUser)
+.put(`${API}/users/:id`, auth.authSession, userController.checkUserOwner, userController.updateUser)
+.delete(`${API}/users/:id`, auth.authSession, userController.checkUserOwner, userController.deleteUser)
 // ITEM ROUTES
-.get(`${API}/items`, auth.authSession, itemController.getWordItems)
 .get(`${API}/items/:id`, auth.authSession, itemController.getWordItem)
 .post(`${API}/items`, auth.authSession, itemController.createWordItem)
 .put(`${API}/items/:id`, auth.authSession, itemController.updateWordItem)
@@ -57,7 +55,6 @@ router
 .get(`${API}/users/items/:id`, auth.authSession, itemController.getUserItems)
 .delete(`${API}/users/items/:id`, auth.authSession, itemController.deleteUserItems)
 // WORDIMAGE ROUTES
-.get(`${API}/images`, auth.authSession, wordImageController.getAllWordImages)
 .get(`${API}/images/:id`, auth.authSession, wordImageController.getWordImage)
 .post(`${API}/images`, auth.authSession, wordImageController.createWordImage)
 .put(`${API}/images/:id`, auth.authSession, wordImageController.updateWordImage)
@@ -65,8 +62,13 @@ router
 // ITEM IMAGE ROUTES
 .get(`${API}/items/images/:id`, auth.authSession, wordImageController.getItemImages)
 .delete(`${API}/items/images/:id`, auth.authSession, wordImageController.deleteItemImages)
-// USER IMAGE ROUTE 
+// USER IMAGE ROUTEs
 .get(`${API}/users/images/:id`, auth.authSession, wordImageController.getUserImages)
 .delete(`${API}/users/images/:id`, auth.authSession, wordImageController.deleteUserImages)
+
+//ADMIN ROUTES
+.get(`${API}/users`, auth.authSession, auth.checkAdmin, userController.getUsers)
+.get(`${API}/items`, auth.authSession, auth.checkAdmin, itemController.getWordItems)
+.get(`${API}/images`, auth.authSession, auth.checkAdmin, wordImageController.getAllWordImages)
 
 export default router

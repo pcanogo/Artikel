@@ -18,6 +18,7 @@ export interface User {
     last_name: string;
     email: string;
     password: string;
+    type ?: string;
 }
 
 export interface ctx {

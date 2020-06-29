@@ -6,22 +6,23 @@ let users: User[] = [
         id: '1',
         first_name: 'user1',
         last_name: 'test1',
-        email: '1@gemail.com',
-        password: 'pwd'
+        email: '1@email.com',
+        password: '$2a$08$eq/fVKyZ9Zcdby3rT8CiyOlwSEgd1eVgTXys4vKbYB2Mnk4X8trtu',
+        type:'admin'
     },
     {
         id: '2',
         first_name: 'user2',
         last_name: 'test2',
-        email: '2@gemail.com',
-        password: 'pwd'
+        email: '2@email.com',
+        password: '$2a$08$eq/fVKyZ9Zcdby3rT8CiyOlwSEgd1eVgTXys4vKbYB2Mnk4X8trtu'
     },
     {
         id: '3',
         first_name: 'user3',
         last_name: 'test3',
-        email: '3@gemail.com',
-        password: 'pwd'
+        email: '3@email.com',
+        password: '$2a$08$eq/fVKyZ9Zcdby3rT8CiyOlwSEgd1eVgTXys4vKbYB2Mnk4X8trtu'
     },
 ];
 

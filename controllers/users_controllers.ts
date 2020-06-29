@@ -1,4 +1,5 @@
 import { ctx, User } from '../types.ts'
+import {AuthService} from '../services/auth-service/auth.ts'
 import { UsersService} from '../services/users/users_service.ts'
 import { WordItemService } from '../services/word-items/word_item_service.ts'
 import { WordImageService } from '../services/word-images/word_image_service.ts'
@@ -8,16 +9,19 @@ import * as bcrypt from "https://deno.land/x/bcrypt/mod.ts"
 export class UsersController {
     private userService : UsersService
     private wordItemService: WordItemService
-    private wordImageService: WordImageService     
+    private wordImageService: WordImageService    
+    private authService: AuthService
 
     constructor (
         userService: UsersService,
         wordItemService : WordItemService,
-        wordImageService: WordImageService      
+        wordImageService: WordImageService,
+        authService: AuthService      
         ) {
         this.userService = userService
         this.wordItemService = wordItemService
         this.wordImageService = wordImageService
+        this.authService = authService
     }
 
     public getUsers = async (ctx : RouterContext) => {
@@ -95,6 +99,27 @@ export class UsersController {
             success: true,
             msg: `Deleted user successfully`
         }
+    }
+
+    public checkUserOwner = async (ctx: RouterContext, next:any) => {
+        const session:any = await this.authService.getSession(ctx)
+        const currentuser = {
+            id: session.payload.iss,
+            type: session.payload.userType
+        }
+        const userID = ctx.params.id
+
+        console.log(currentuser.type)
+        if(userID !== currentuser.id && currentuser.type !== 'admin'){
+            ctx.response.status = 401
+            ctx.response.body = {
+                success: false,
+                msg: 'Not Authorized'
+            }
+        } else {
+            await next()
+        }
+         
     }
 
 }
