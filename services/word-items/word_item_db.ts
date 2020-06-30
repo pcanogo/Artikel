@@ -17,7 +17,17 @@ export class WordItemDB extends WordItemService {
 
     public async getAllWordItems() : Promise<WordItem[]> {
         const result = await this._db.execQuery('SELECT * FROM word_items;')
-        return result.rows
+        let items: WordItem[] = []
+
+        result.rows.map( (row, i) =>
+            items[i] = {
+                id: row[ITEM_ID],
+                user_id: row[USER_ID],
+                word: row[WORD],
+                translation: row[TRANSLATION]
+            }
+        )
+        return items
     }
 
     public async getWordItem(id: string) : Promise<WordItem | undefined> {

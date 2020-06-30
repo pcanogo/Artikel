@@ -16,7 +16,16 @@ export class WordImageDB extends WordImageService {
 
     public async getAllWordImages() : Promise<WordImage[]> {
         const result = await this._db.execQuery('SELECT * FROM word_images;')
-        return result.rows 
+        let images:WordImage[] = []
+        result.rows.map( (row, i) =>
+            images[i] = {
+                id: row[IMG_ID],
+                item_id: row[ITEM_ID],
+                user_id: row[USER_ID],
+                url: row[URL]
+            }
+        )
+        return images
     }
 
     public async getWordImage(id: string) : Promise<WordImage | undefined> {

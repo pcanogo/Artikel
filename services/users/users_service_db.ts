@@ -99,7 +99,8 @@ export class UserDB extends UsersService {
                 first_name: result.rows[0][FIRST_NAME],
                 last_name: result.rows[0][LAST_NAME],
                 email: result.rows[0][EMAIL],
-                password: result.rows[0][PWD]
+                password: result.rows[0][PWD],
+                type: result.rows[0][TYPE]
             }
             return user
         }   

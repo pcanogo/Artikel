@@ -24,7 +24,7 @@ const router = new Router()
 const db = new DBService(configs['local'])
 const authService = new AuthService(configs['local'].secret_key)
 
-const userService = new UserRAM
+const userService = new UserDB(db)
 const itemService = new WordItemDB(db)
 const imageService = new WordImageDB(db)
 
