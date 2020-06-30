@@ -87,5 +87,32 @@ export class AuthController{
         } 
     }
 
+    public checkSessionOwner = async (ctx: RouterContext, next:any ) => {
+        const body  = await ctx.request.body()
+        if(!body.value.user_id){
+            ctx.response.status = 400
+            ctx.response.body = {
+                success: false,
+                msg: 'bad request'
+            }
+        } else {
+            const session:any = await this.authService.getSession(ctx)
+            const currentuser = {
+                id: session.payload.iss,
+                type: session.payload.userType
+            }
+            const userID = body.value.user_id
+            if(userID !== currentuser.id && currentuser.type !== 'admin'){
+                ctx.response.status = 401
+                ctx.response.body = {
+                    success: false,
+                    msg: 'Not Authorized'
+                }
+            } else {
+                await next()
+            }
+        }
+    }
+
 }
 

@@ -81,6 +81,7 @@ export class WordImageRAM extends WordImageService {
     }
     
     public createWordImage(newWordImage: WordImage) : string {
+        newWordImage.id = String(wordImages.length + 1)
         wordImages.push(newWordImage)
         return newWordImage.id
     }

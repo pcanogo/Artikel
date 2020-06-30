@@ -149,7 +149,13 @@ export class WordItemController {
     }
 
     public checkItemOwner = async (ctx: RouterContext, next:any ) => {
-        if(ctx.params.id){
+        if(!ctx.params.id){
+            ctx.response.status = 400
+            ctx.response.body = {
+                success: false,
+                msg: 'bad request'
+            }
+        } else {
             const session:any = await this.authService.getSession(ctx)
             const currentuser = {
                 id: session.payload.iss,
@@ -167,6 +173,5 @@ export class WordItemController {
             }
         }
     }
-
 }
 

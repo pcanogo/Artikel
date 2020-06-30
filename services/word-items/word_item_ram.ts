@@ -41,6 +41,7 @@ export class WordItemRAM extends WordItemService {
     }
 
     public createWordItem(newItem: WordItem) : string {
+        newItem.id = String(wordItems.length + 1)
         wordItems.push(newItem)
         return newItem.id
     }
