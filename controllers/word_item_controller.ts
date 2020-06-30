@@ -112,7 +112,6 @@ export class WordItemController {
 
     public getUserItems = async ({params, response} : ctx) => {
         const items = await this.itemService.getUserItems(params.id)
-
         if(!items){
             response.status = 404
             response.body = {

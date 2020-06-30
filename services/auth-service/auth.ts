@@ -21,7 +21,8 @@ export class AuthService {
             typ: "JWT",
         }
         const key = this.key
-
+        console.log('THIS IS THE PAYLOAD')
+        console.log(payload)
         return makeJwt({ header, payload, key})
     }
 

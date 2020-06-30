@@ -100,7 +100,7 @@ export class WordImageRAM extends WordImageService {
     }
 
     public getItemImages(itemId: string) : WordImage[] {
-        const itemImages = wordImages.filter(x => x.item_id !== itemId )
+        const itemImages = wordImages.filter(x => x.item_id === itemId )
         return itemImages
     }
 
@@ -117,10 +117,7 @@ export class WordImageRAM extends WordImageService {
     }
 
     public getUserItemImages(userID: string) : WordImage[] {
-        let userItemImages: WordImage[] = []
-        userItemImages
-            .filter(x => x.user_id === userID)
-        return userItemImages
+        return wordImages.filter(x => x.user_id === userID)
     }
 
     public deleteUserItemImages(userId: string) : void {

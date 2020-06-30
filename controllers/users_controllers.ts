@@ -109,7 +109,6 @@ export class UsersController {
         }
         const userID = ctx.params.id
 
-        console.log(currentuser.type)
         if(userID !== currentuser.id && currentuser.type !== 'admin'){
             ctx.response.status = 401
             ctx.response.body = {

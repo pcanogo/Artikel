@@ -65,7 +65,7 @@ export class WordItemRAM extends WordItemService {
     }
 
     public getUserItems( userID: string ) : WordItem[] {
-        const userItems = wordItems.filter(x => x.user_id !== userID )
+        const userItems = wordItems.filter(x => x.user_id === userID )
         return userItems
     }
 
