@@ -21,7 +21,7 @@ export class WordItemDB extends WordItemService {
     }
 
     public async getWordItem(id: string) : Promise<WordItem | undefined> {
-        const result = await this._db.execQuery('SELECT * FROM word_images WHERE id = $1;', [id])
+        const result = await this._db.execQuery('SELECT * FROM word_items WHERE id=$1;', [id])
         if(!result.rowCount){
             return undefined
         } else {
@@ -101,6 +101,11 @@ export class WordItemDB extends WordItemService {
         `DELETE FROM word_items
         WHERE user_id=$1;`,
         [userID])
-
     }
+
+    public async getUserID(itemID: string) : Promise<string> {
+        const result = await this._db.execQuery( 'SELECT user_id FROM word_items WHERE id=$1',[itemID])
+        const userID: string = result.rows[0][0]
+        return userID
+    } 
 }

@@ -63,7 +63,8 @@ export class WordImageDB extends WordImageService {
 
     public async getItemImagesURL(itemId: string) : Promise<string[]> {
         const result = await this._db.execQuery('SELECT url FROM word_images WHERE item_id=$1;', [itemId])
-        const imageURL = result.rows[0][0]
+        let imageURL:string[] = []
+        result.rows.map(x => imageURL.push(x[0]))
         return imageURL
    
     }

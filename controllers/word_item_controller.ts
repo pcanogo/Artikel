@@ -1,17 +1,22 @@
 import { ctx, WordItem } from '../types.ts'
 import { WordItemService } from '../services/word-items/word_item_service.ts'
 import { WordImageService } from '../services/word-images/word_image_service.ts'
+import { RouterContext } from "https://deno.land/x/oak/mod.ts"
+import { AuthService } from '../services/auth-service/auth.ts'
 
 export class WordItemController {
     public itemService: WordItemService
     public wordImageService: WordImageService
+    public authService: AuthService
 
     constructor (
         itemService : WordItemService,
-        wordImageService: WordImageService
+        wordImageService: WordImageService,
+        authService: AuthService
         ){
         this.itemService = itemService
-        this.wordImageService = wordImageService
+        this.wordImageService = wordImageService,
+        this.authService = authService
     }
 
     public getWordItems = async ({ response } : ctx) => {
@@ -139,6 +144,26 @@ export class WordItemController {
             response.body = {
                 success: true,
                 data: 'User items deleted.'
+            }
+        }
+    }
+
+    public checkItemOwner = async (ctx: RouterContext, next:any ) => {
+        if(ctx.params.id){
+            const session:any = await this.authService.getSession(ctx)
+            const currentuser = {
+                id: session.payload.iss,
+                type: session.payload.userType
+            }
+            const userID = await this.itemService.getUserID(ctx.params.id)
+            if(String(userID) !== currentuser.id && currentuser.type !== 'admin'){
+                ctx.response.status = 401
+                ctx.response.body = {
+                    success: false,
+                    msg: 'Not Authorized'
+                }
+            } else {
+                await next()
             }
         }
     }

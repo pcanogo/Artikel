@@ -10,6 +10,4 @@ export abstract class UsersService {
     abstract deleteUser(id: string) : void | Promise<void>
 
     abstract getUserByEmail(email: string) : User | undefined | Promise<User | undefined>
-
-
 }

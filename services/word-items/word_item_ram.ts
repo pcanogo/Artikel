@@ -71,4 +71,9 @@ export class WordItemRAM extends WordItemService {
     public deleteUserItems(userId:string) : void {
         wordItems = wordItems.filter(x => x.user_id !== userId)
     }
+
+    public getUserID(itemID:string): string | undefined{
+        const item : any = wordItems.find(x => x.id === itemID)
+        return item.user_id
+    }
 }

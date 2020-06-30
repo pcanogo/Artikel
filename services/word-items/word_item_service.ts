@@ -11,4 +11,6 @@ export abstract class WordItemService {
     abstract getAllWordItems() : WordItem[] | Promise<WordItem[]>
     abstract getUserItems(userID: string) : WordItem[] | Promise<WordItem[] | undefined>
     abstract deleteUserItems(userID: string) : void | Promise<void>
+
+    abstract getUserID(itemID: string) : string | undefined | Promise<string>
 }   
