@@ -1,11 +1,18 @@
 import { ctx, WordImage } from '../types.ts'
 import { WordImageService } from '../services/word-images/word_image_service.ts'
+import { AuthService } from '../services/auth-service/auth.ts'
+import { RouterContext } from "https://deno.land/x/oak/mod.ts"
 
 export class WordImageController {
     private wordImageService: WordImageService
+    private authService: AuthService
 
-    constructor (wordImageService : WordImageService){
+    constructor (
+        wordImageService : WordImageService,
+        authService: AuthService
+    ){
         this.wordImageService = wordImageService
+        this.authService = authService
     }
 
     public getAllWordImages = async ({ response } : ctx) => {
@@ -153,6 +160,26 @@ export class WordImageController {
             response.body = {
                 success: true,
                 data: 'User images deleted'
+            }
+        }
+    }
+
+    public checkImageOwner = async (ctx: RouterContext, next:any ) => {
+        if(ctx.params.id){
+            const session:any = await this.authService.getSession(ctx)
+            const currentuser = {
+                id: session.payload.iss,
+                type: session.payload.userType
+            }
+            const userID = await this.wordImageService.getUserID(ctx.params.id)
+            if(String(userID) !== currentuser.id && currentuser.type !== 'admin'){
+                ctx.response.status = 401
+                ctx.response.body = {
+                    success: false,
+                    msg: 'Not Authorized'
+                }
+            } else {
+                await next()
             }
         }
     }

@@ -26,12 +26,12 @@ const authService = new AuthService(configs['local'].secret_key)
 
 const userService = new UserRAM
 const itemService = new WordItemDB(db)
-const wordImageService = new WordImageDB(db)
+const imageService = new WordImageDB(db)
 
 const auth = new AuthController(userService, authService);
-const userController = new UsersController(userService, itemService, wordImageService, authService)
-const itemController = new WordItemController(itemService, wordImageService, authService)
-const wordImageController = new WordImageController(wordImageService)
+const user = new UsersController(userService, itemService, imageService, authService)
+const item = new WordItemController(itemService, imageService, authService)
+const image = new WordImageController(imageService, authService)
 
 
 
@@ -42,33 +42,33 @@ router
 // AUTH ROUTES
 .post(`${API}/auth`, auth.login)
 // USER ROUTES
-.get(`${API}/users/:id`, auth.authSession,userController.checkUserOwner, userController.getUser)
-.post(`${API}/users`, userController.createUser)
-.put(`${API}/users/:id`, auth.authSession, userController.checkUserOwner, userController.updateUser)
-.delete(`${API}/users/:id`, auth.authSession, userController.checkUserOwner, userController.deleteUser)
+.get(`${API}/users/:id`, auth.authSession, user.checkUserOwner, user.getUser)
+.post(`${API}/users`, user.createUser)
+.put(`${API}/users/:id`, auth.authSession, user.checkUserOwner, user.updateUser)
+.delete(`${API}/users/:id`, auth.authSession, user.checkUserOwner, user.deleteUser)
 // ITEM ROUTES
-.get(`${API}/items/:id`, auth.authSession, itemController.checkItemOwner,itemController.getWordItem)
-.post(`${API}/items`, auth.authSession, itemController.createWordItem)
-.put(`${API}/items/:id`, auth.authSession, itemController.checkItemOwner, itemController.updateWordItem)
-.delete(`${API}/items/:id`, auth.authSession, itemController.checkItemOwner,itemController.deleteWordItem)
+.get(`${API}/items/:id`, auth.authSession, item.checkItemOwner,item.getWordItem)
+.post(`${API}/items`, auth.authSession, item.createWordItem)
+.put(`${API}/items/:id`, auth.authSession, item.checkItemOwner, item.updateWordItem)
+.delete(`${API}/items/:id`, auth.authSession, item.checkItemOwner,item.deleteWordItem)
 // USER ITEM ROUTES
-.get(`${API}/users/items/:id`, auth.authSession, userController.checkUserOwner, itemController.getUserItems)
-.delete(`${API}/users/items/:id`, auth.authSession, userController.checkUserOwner, itemController.deleteUserItems)
+.get(`${API}/users/items/:id`, auth.authSession, user.checkUserOwner, item.getUserItems)
+.delete(`${API}/users/items/:id`, auth.authSession, user.checkUserOwner, item.deleteUserItems)
 // WORDIMAGE ROUTES
-.get(`${API}/images/:id`, auth.authSession, wordImageController.getWordImage)
-.post(`${API}/images`, auth.authSession, wordImageController.createWordImage)
-.put(`${API}/images/:id`, auth.authSession, wordImageController.updateWordImage)
-.delete(`${API}/images/:id`, auth.authSession, wordImageController.deleteWordImage)
+.get(`${API}/images/:id`, auth.authSession, image.checkImageOwner,image.getWordImage)
+.post(`${API}/images`, auth.authSession, image.createWordImage)
+.put(`${API}/images/:id`, auth.authSession, image.checkImageOwner, image.updateWordImage)
+.delete(`${API}/images/:id`, auth.authSession, image.checkImageOwner, image.deleteWordImage)
 // ITEM IMAGE ROUTES
-.get(`${API}/items/images/:id`, auth.authSession, itemController.checkItemOwner,wordImageController.getItemImages)
-.delete(`${API}/items/images/:id`, auth.authSession, itemController.checkItemOwner, wordImageController.deleteItemImages)
+.get(`${API}/items/images/:id`, auth.authSession, item.checkItemOwner,image.getItemImages)
+.delete(`${API}/items/images/:id`, auth.authSession, item.checkItemOwner, image.deleteItemImages)
 // USER IMAGE ROUTEs
-.get(`${API}/users/images/:id`, auth.authSession, userController.checkUserOwner,wordImageController.getUserImages)
-.delete(`${API}/users/images/:id`, auth.authSession, userController.checkUserOwner, wordImageController.deleteUserImages)
+.get(`${API}/users/images/:id`, auth.authSession, user.checkUserOwner,image.getUserImages)
+.delete(`${API}/users/images/:id`, auth.authSession, user.checkUserOwner, image.deleteUserImages)
 
 //ADMIN ROUTES
-.get(`${API}/users`, auth.authSession, auth.checkAdmin, userController.getUsers)
-.get(`${API}/items`, auth.authSession, auth.checkAdmin, itemController.getWordItems)
-.get(`${API}/images`, auth.authSession, auth.checkAdmin, wordImageController.getAllWordImages)
+.get(`${API}/users`, auth.authSession, auth.checkAdmin, user.getUsers)
+.get(`${API}/items`, auth.authSession, auth.checkAdmin, item.getWordItems)
+.get(`${API}/images`, auth.authSession, auth.checkAdmin, image.getAllWordImages)
 
 export default router

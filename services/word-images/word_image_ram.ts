@@ -125,4 +125,9 @@ export class WordImageRAM extends WordImageService {
     public deleteUserItemImages(userId: string) : void {
         wordImages = wordImages.filter(x => x.user_id !== userId)
     }
+
+    public getUserID(itemID:string): string | undefined{
+        const item : any = wordImages.find(x => x.id === itemID)
+        return item.user_id
+    }
 }

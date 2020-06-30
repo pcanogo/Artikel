@@ -5,9 +5,9 @@ import { RouterContext } from "https://deno.land/x/oak/mod.ts"
 import { AuthService } from '../services/auth-service/auth.ts'
 
 export class WordItemController {
-    public itemService: WordItemService
-    public wordImageService: WordImageService
-    public authService: AuthService
+    private itemService: WordItemService
+    private wordImageService: WordImageService
+    private authService: AuthService
 
     constructor (
         itemService : WordItemService,

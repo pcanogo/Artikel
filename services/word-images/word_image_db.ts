@@ -124,4 +124,10 @@ export class WordImageDB extends WordImageService {
         )
     }
 
+    public async getUserID(imageID: string) : Promise<string> {
+        const result = await this._db.execQuery( 'SELECT user_id FROM word_images WHERE id=$1',[imageID])
+        const userID: string = result.rows[0][0]
+        return userID
+    } 
+
 }
