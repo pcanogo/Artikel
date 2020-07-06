@@ -105,4 +105,8 @@ export class UserDB extends UsersService {
             return user
         }   
     }
+
+    public async updatePassword(userID: string, pwd: string): Promise<void> {
+        await this._db.execQuery('UPDATE users SET password = $1 WHERE id=$2;', [pwd, userID])
+    }
 }

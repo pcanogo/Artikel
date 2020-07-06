@@ -51,6 +51,11 @@ export class UserRAM extends UsersService {
         return userID
     }
 
+    public updatePassword (userID:string, pwd: string) : void {
+        users = users.map(x => x.id === userID ? { ...x, pwd } : x)
+    }
+
+
     public deleteUser(id:string) : void {
         users = users.filter(x => x.id !== id)
     }

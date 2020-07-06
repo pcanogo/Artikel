@@ -114,5 +114,35 @@ export class AuthController{
         }
     }
 
+    public updatePassword = async (ctx: RouterContext) => {
+        const body = await ctx.request.body()
+        const session:any = await this.authService.getSession(ctx)
+        const user = await this.userService.getUser(session.payload.iss)
+
+        if(!user){
+            ctx.response.status = 404
+            ctx.response.body = {
+                success: false,
+                msg: 'User Error'
+            }
+        } else {
+            const pwdMatch = await bcrypt.compare(body.value.password, user.password)
+            if(!pwdMatch){
+                ctx.response.status = 401
+                ctx.response.body = {
+                    success: false,
+                    msg: 'Incorrect password'
+                }
+            } else {
+                await this.userService.updatePassword(user.id, body.value.newPassword)
+                ctx.response.status = 200
+                ctx.response.body = {
+                    success: true,
+                    data: 'Password Updated'
+                }
+            }
+        }
+    }
+
 }
 

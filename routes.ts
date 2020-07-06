@@ -50,6 +50,7 @@ router
 .post(`${API}/users`, user.createUser)
 .put(`${API}/users/:id`, auth.authSession, user.checkUserOwner, user.updateUser)
 .delete(`${API}/users/:id`, auth.authSession, user.checkUserOwner, user.deleteUser)
+.post(`${API}/users/credentials/:id`, auth.authSession, user.checkUserOwner, auth.updatePassword)
 // ITEM ROUTES
 .get(`${API}/items/:id`, auth.authSession, item.checkItemOwner, item.getWordItem)
 .post(`${API}/items`, auth.authSession, auth.checkSessionOwner, item.createWordItem)
