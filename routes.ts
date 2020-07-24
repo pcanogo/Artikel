@@ -1,6 +1,5 @@
+import configs  from  './config.ts'
 import { Router } from 'https://deno.land/x/oak/mod.ts'
-import { Client } from "https://deno.land/x/postgres/mod.ts"
-import { configs } from './config.ts'
 import { DBService } from './db/db.ts'
 import {AuthService} from './services/auth-service/auth.ts'
 
@@ -9,35 +8,38 @@ import { UsersController } from './controllers/users_controllers.ts'
 import { WordImageController } from './controllers/word_image_controllers.ts'
 import { WordItemController } from './controllers/word_item_controller.ts'
 
+import { UserRAM } from './services/users/users_service_ram.ts'
+import { WordImageRAM } from './services/word-images/word_image_ram.ts'
+import { WordItemRAM } from './services/word-items/word_item_ram.ts'
+
 import { UserDB } from './services/users/users_service_db.ts'
 import { WordImageDB } from './services/word-images/word_image_db.ts'
 import { WordItemDB } from './services/word-items/word_item_db.ts'
 
-// import { UserRAM } from './services/users/users_service_ram.ts'
-// import { WordImageRAM } from './services/word-images/word_image_ram.ts'
-// import { WordItemRAM } from './services/word-items/word_item_ram.ts'
-
+let userService 
+let itemService 
+let imageService
 
 const API = '/api/v1'
 const router = new Router()
+const authService = new AuthService(configs.secret_key)
 
-const db = new DBService(configs['local'])
-const authService = new AuthService(configs['local'].secret_key)
-
-const userService = new UserDB(db)
-const itemService = new WordItemDB(db)
-const imageService = new WordImageDB(db)
-
-// const userService = new UserRAM
-// const itemService = new WordItemRAM
-// const imageService = new WordImageRAM
+if (configs.deno_app === 'dev_local') {
+    userService = new UserRAM
+    itemService = new WordItemRAM
+    imageService = new WordImageRAM
+} else {
+    const db = new DBService(configs)
+    userService = new UserDB(db)
+    itemService = new WordItemDB(db)
+    imageService = new WordImageDB(db)
+    
+}
 
 const auth = new AuthController(userService, authService);
 const user = new UsersController(userService, itemService, imageService, authService)
 const item = new WordItemController(itemService, imageService, authService)
 const image = new WordImageController(imageService, authService)
-
-
 
 router
 .get('/', (ctx:any) => {
